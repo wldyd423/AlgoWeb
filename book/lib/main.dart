@@ -52,6 +52,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  var _countHolder = <int>[];
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -63,6 +65,27 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _decrementCounter() {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter--;
+    });
+  }
+
+  void toggleHolder() {
+    setState(() {
+      if (_countHolder.contains(_counter)) {
+        _countHolder.remove(_counter);
+      } else {
+        _countHolder.add(_counter);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -71,6 +94,14 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
+    IconData icon;
+    if (_countHolder.contains(_counter)) {
+      icon = Icons.star;
+    } else {
+      icon = Icons.star_border;
+    }
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -104,6 +135,21 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            Tmp(),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  onPressed: _decrementCounter,
+                  child: const Text('Go back!'),
+                ),
+                ElevatedButton.icon(
+                  onPressed: toggleHolder,
+                  icon: Icon(icon),
+                  label: const Text('Hold'),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -112,6 +158,27 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class Tmp extends StatelessWidget {
+  const Tmp({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    var style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+    return Card(
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text('Lets see if this works', style: style),
+      ),
     );
   }
 }
