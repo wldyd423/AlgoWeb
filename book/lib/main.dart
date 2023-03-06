@@ -50,6 +50,96 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget page;
+    switch (_selectedIndex) {
+      case 0:
+        print('hit case 0');
+        page = CoverPage();
+        break;
+      case 1:
+        print('hit case 1');
+        page = Test();
+        break;
+      case 2:
+        print('hit case 2');
+        page = Placeholder();
+        break;
+      default:
+        throw UnimplementedError('not implemented: $_selectedIndex');
+    }
+    return LayoutBuilder(builder: (context, constraints) {
+      return Scaffold(
+        body: Row(
+          children: [
+            SafeArea(
+              child: NavigationRail(
+                extended: constraints.maxWidth > 600,
+                destinations: [
+                  NavigationRailDestination(
+                    icon: Icon(Icons.home),
+                    label: Text('Home'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.star),
+                    label: Text('Tutorial Remains'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.workspaces_rounded),
+                    label: Text('What numbers did you star?'),
+                  ),
+                ],
+                selectedIndex: _selectedIndex,
+                onDestinationSelected: (val) {
+                  setState(() {
+                    _selectedIndex = val;
+                  });
+                  print('val: $val  _selectedIndex: $_selectedIndex');
+                },
+              ),
+            ),
+            Expanded(
+              child: Container(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: page,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class CoverPage extends StatefulWidget {
+  const CoverPage({super.key});
+  @override
+  State<CoverPage> createState() => _CoverPageState();
+}
+
+class _CoverPageState extends State<CoverPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text('Cover Page'),
+      ),
+    );
+  }
+}
+
+class Test extends StatefulWidget {
+  const Test({super.key});
+  @override
+  State<Test> createState() => _TestState();
+
+  final String title = 'Book to App: Introduction to Algorithms Third Edition';
+}
+
+class _TestState extends State<Test> {
   int _counter = 0;
 
   var _countHolder = <int>[];
