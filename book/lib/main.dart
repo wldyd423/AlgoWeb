@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:book/chapter1.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -51,7 +53,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var _selectedIndex = 0;
-
+  var _countHolder = <int>[];
   @override
   Widget build(BuildContext context) {
     Widget page;
@@ -62,11 +64,19 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case 1:
         print('hit case 1');
-        page = Test();
+        page = Test(
+          countHolder: _countHolder,
+        );
         break;
       case 2:
         print('hit case 2');
-        page = Placeholder();
+        page = HeldPage(
+          countHolder: _countHolder,
+        );
+        break;
+      case 3:
+        print('hit case 3');
+        page = Chapter1();
         break;
       default:
         throw UnimplementedError('not implemented: $_selectedIndex');
@@ -91,6 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: Icon(Icons.workspaces_rounded),
                     label: Text('What numbers did you star?'),
                   ),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.book), label: Text('Chapters'))
                 ],
                 selectedIndex: _selectedIndex,
                 onDestinationSelected: (val) {
@@ -132,7 +144,8 @@ class _CoverPageState extends State<CoverPage> {
 }
 
 class Test extends StatefulWidget {
-  const Test({super.key});
+  const Test({super.key, required this.countHolder});
+  final List<int> countHolder;
   @override
   State<Test> createState() => _TestState();
 
@@ -141,8 +154,7 @@ class Test extends StatefulWidget {
 
 class _TestState extends State<Test> {
   int _counter = 0;
-
-  var _countHolder = <int>[];
+  // var _countHolder = <int>[];
 
   void _incrementCounter() {
     setState(() {
@@ -168,10 +180,10 @@ class _TestState extends State<Test> {
 
   void toggleHolder() {
     setState(() {
-      if (_countHolder.contains(_counter)) {
-        _countHolder.remove(_counter);
+      if (widget.countHolder.contains(_counter)) {
+        widget.countHolder.remove(_counter);
       } else {
-        _countHolder.add(_counter);
+        widget.countHolder.add(_counter);
       }
     });
   }
@@ -186,7 +198,7 @@ class _TestState extends State<Test> {
     // than having to individually change instances of widgets.
 
     IconData icon;
-    if (_countHolder.contains(_counter)) {
+    if (widget.countHolder.contains(_counter)) {
       icon = Icons.star;
     } else {
       icon = Icons.star_border;
@@ -269,6 +281,34 @@ class Tmp extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Text('Lets see if this works', style: style),
       ),
+    );
+  }
+}
+
+class HeldPage extends StatelessWidget {
+  final List<int> countHolder;
+  const HeldPage({super.key, required this.countHolder});
+
+  @override
+  Widget build(BuildContext context) {
+    if (countHolder.isEmpty) {
+      return const Text('No numbers held');
+    }
+
+    // print(countHolder);
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text(' Here is a total of '
+              '${countHolder.length} numbers held'),
+        ),
+        for (var i in countHolder)
+          ListTile(
+            leading: Icon(Icons.star),
+            title: Text('$i'),
+          ),
+      ],
     );
   }
 }
