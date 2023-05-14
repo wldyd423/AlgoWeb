@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: Text('What numbers did you star?'),
                   ),
                   NavigationRailDestination(
-                      icon: Icon(Icons.book), label: Text('Chapters'))
+                      icon: Icon(Icons.book), label: Text('Chapter 1'))
                 ],
                 selectedIndex: _selectedIndex,
                 onDestinationSelected: (val) {
